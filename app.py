@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify
 import google.generativeai as genai
+import os
 
 app = Flask(__name__)
 
-# Replace with your actual Gemini API Key
-GOOGLE_API_KEY = "AIzaSyDm3M6aaZaeZua6v_fFNWIl7w96Cmryd50"
+GOOGLE_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 
-# Correct model name
 model = genai.GenerativeModel("models/gemini-1.5-flash-latest")
 
 @app.route('/')
@@ -37,4 +36,4 @@ Question: {user_question}
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
